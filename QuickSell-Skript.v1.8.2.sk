@@ -1,0 +1,394 @@
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#█																			  █
+#█Welcome into QUICKSELL skript!       									      █
+#█Thanks for using my skript!       									      █
+#█Author: daadssf121								                     	  █
+#█Informations									                			  █
+#█| Your eiditon:															  █
+#█  - |>|Filename| QuickSell-Skript.v1.8.2.sk (default)     	              █
+#█  - |>|Version| 1.8.2		      										      █
+#█	- |>|File| 394 Lines, 17 KB (Kilobytes)									  █
+#█																			  █
+#█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█
+#
+# DOCUMENTATION - IMPORTANT!
+#
+#
+#       - INSTALLING
+#
+#		What you need to use this skript?
+#		Just make an NPC with Citizens plugin, named "Example, what you want" (don't forget colors!)
+#		And when you use Right-Click on that NPC, your blocks will be sold.
+#		That don't requrie permission, the sale is available for everyone.
+#
+#		This is the skript.
+#		If you want, you can change the prices. And you add more sales.
+#       An more item, prices, or you can make your QuickSell even better
+#       with self configurations.
+#		
+#
+#		- REQUIRED PLUGINS
+#		
+#		'Vault' required:
+#			https://www.spigotmc.org/resources/vault.34315/
+#
+#       'EssentailsX' required:
+#			https://essentialsx.net/downloads.html
+#       (( You don't need Essentials really, its recommended ))
+#
+#       
+#       - CONFIGURATION
+#
+#       NPC Configuration only in the file [Manual]. (Example NPC starts in line 128)
+#       When you want more NPC, duplicate/copy the configuration.
+#
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#Changelog
+#
+#   1.8.2
+#   » Added SellerItem function
+#   » Added {selleritem} variable
+#   » Added new options
+#   » Fixed Essentials plugin checking doesn't works
+#
+#   1.8.1
+#   » Changes in documentation in many places
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+options:
+#Configuration
+
+	NPC1-Name: &f&lDEFAULT MINE SELL
+	#NPC2-Name: &c&lSUPERIOR MINE SELL
+	#NPC3-Name: &b&lPREMIUM MINE SELL
+	#> QuickSell NPCs' name
+
+	Prefix: &b&lQUICK&d&lSELL &8»
+	#|> No prefix -> &r
+	#> Style
+
+	SellMessage: &b&lSELLER &8» &7You sold your blocks for &d%{_value0}% &fdollars.
+	JoinNotifyMessage: &7Skript running on version %{version}%
+	FunctionDisabledMessage: &7This function is disabled.
+	#> Messages
+
+	Command: sell
+	CommandPermission: quicksell.sellcommand
+	CommandPermissionMessage: &7No permission!
+	CommandAliases: sellblocks, sellitems, sellmyblocks, sellmyitems, seller
+	#> Permission options
+
+	AdminCommandPermission: quicksell.admin
+	#> Permission of admin command
+	NotifyPermission: quicksell.notify
+	#> Permission of notify
+
+	AdminCommand: quicksell
+	AdminCommandAliases: qs, quicksell:qs, quicksell:quicksell
+	ErrorArgumentMissing: &cAn argument missing!
+	ErrorFunctionNotExists: &cThis function doesn't exists!
+	#> Admin command options
+
+	SellerItemMessage: &b&lSELLER&d&lITEM &8» &7You sold your blocks with your Instant Seller Item!
+	#> Seller Item *NEW*
+	#> You can find at Line 214
+	#!> The commands he uses is the "sell" (Default)
+	#>> Give Command: /give PLAYER nether_star 1 name:&aSell_&7(Right_Click) lore:&8Sell your blocks instantly!|&f&lDEFAULT&7_mine_prices #! Here is the give-command
+
+	LoadMessage: &7QuickSell v%{version}% is loaded!
+	UnloadMessage: &7QuickSell v%{version}% was unloaded!
+	ErrorLoadMessage: &cAn internal error occurred while loading. Your server don't have the Essentials plugin!
+	#> Send message to console when skript changes her status
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#You want to use another Economy plugin? Or you dont like Economy plugins?
+#Then just delete this part from your configuration but watch out!
+#
+#Console strings
+on skript load:
+	if {console-strings} is true:
+		if {essentialscheck} is true:
+			if "plugins\Essentials" exists:
+				send "{@Prefix} {@LoadMessage}" to console
+			else:
+				send "{@Prefix} {@ErrorLoadMessage}" to console
+		else:
+			send "{@Prefix} {@LoadMessage}" to console
+		#> Skript needs EssentialsX, there may be problems with older Essentials
+
+on skript unload:
+	if {console-strings} is true:
+		send "{@Prefix} {@UnloadMessage}" to console
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+variables:
+#Functions
+
+	{essentialscheck} = true
+	{quicksellnpc} = true
+	{quicksellcommand} = true
+	{sell-message} = true
+	{disabled-message} = true
+	{remove-items} = true
+	{notify-function} = true
+	{give-money} = true
+	{admin-command} = true
+	{console-strings} = true
+	{selleritem} = true
+
+
+	{version} = "1.8.2"
+	#> Version of Skript, don't change this!
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#An example for sell blocks:
+on rightclick on entity:
+	if {quicksellnpc} is true: 
+		if name of entity is "{@NPC1-Name}":
+			set {_BLOCK_iron} to number of iron block in player's inventory
+			set {_BLOCK_gold} to number of gold block in player's inventory
+			set {_BLOCK_diamond} to number of diamond block in player's inventory
+			set {_BLOCK_emerald} to number of emerald block in player's inventory
+			set {_BALANCE_moneyreward1} to 100 * {_BLOCK_iron}
+			set {_BALANCE_moneyreward2} to 200 * {_BLOCK_gold}
+			set {_BALANCE_moneyreward3} to 300 * {_BLOCK_diamond}
+			set {_BALANCE_moneyreward4} to 400 * {_BLOCK_emerald}
+			set {_BALANCE_total} to {_BALANCE_moneyreward1} + {_BALANCE_moneyreward2} + {_BALANCE_moneyreward3} + {_BALANCE_moneyreward4}
+			if {remove-items} is true:
+				remove all iron block, gold block, diamond block and emerald block from player's inventory
+			if {sell-message} is true:
+				send "{@Prefix} {@SellMessage}" to player
+			if {give-money} is true:
+				add {_BALANCE_total} to player's balance
+	else:
+		if {disabled-message} is true:
+			send "{@Prefix} {@FunctionDisabledMessage}" to player
+		else:
+			stop
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#
+#                           Make your Seller NPC! 
+#
+# How to do it:
+#
+#   Check item in player's inventory:
+#   • set {_ITEM} to number of ITEM in player's inventory
+#
+#   Make own price for every item:
+#   • set {_BALANCE_moneyreward} to 225 * {_ITEM}
+#
+#   Combinate this for final price
+#   • set {_BALANCE_total} to {_BALANCE_moneyreward-1} + {_BALANCE_moneyreward-2} and more...
+#	• add {_BALANCE_total} to player's balance
+#
+#  Don't forget!!!
+#  Remove items from players inventory, or the players can make infinite money by this error.
+#  • remove all ITEMS (ITEM1, ITEM2 and ITEM3 [So before the last item use "and"!]) from player's inventory
+#
+#
+#BUT! If you want to make a COMMAND for sellings, use this format:
+#(( Command options was configured to options panel ))
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+command /{@Command}:
+	aliases: {@CommandAliases}
+	permission: {@CommandPermission}
+	permission message: {@CommandPermissionMessage}
+	trigger:
+		if {quicksellcommand} is true: 
+			set {_BLOCK_iron} to number of iron block in player's inventory
+			set {_BLOCK_gold} to number of gold block in player's inventory
+			set {_BLOCK_diamond} to number of diamond block in player's inventory
+			set {_BLOCK_emerald} to number of emerald block in player's inventory
+			set {_BALANCE_moneyreward1} to 100 * {_BLOCK_iron}
+			set {_BALANCE_moneyreward2} to 200 * {_BLOCK_gold}
+			set {_BALANCE_moneyreward3} to 300 * {_BLOCK_diamond}
+			set {_BALANCE_moneyreward4} to 400 * {_BLOCK_emerald}
+			set {_BALANCE_total} to {_BALANCE_moneyreward1} + {_BALANCE_moneyreward2} + {_BALANCE_moneyreward3} + {_BALANCE_moneyreward4}
+			if {remove-items} is true:
+				remove all iron block, gold block, diamond block and emerald block from player's inventory
+			if {sell-message} is true:
+				send "{@SellMessage}" to player
+			if {give-money} is true:
+				add {_BALANCE_total} to player's balance
+		else:
+			if {disabled-message} is true:
+				send "{@Prefix} {@FunctionDisabledMessage}" to player
+			else:
+				stop
+
+#Seller Item
+#(( Use Essentials! ))
+on rightclick with nether star:
+	if {selleritem} is true:
+		if name of player's held item is "&aSell &7(Right Click)":
+		#Give Command: /give PLAYER nether_star 1 name:&aSell_&7(Right_Click) lore:&8Sell your blocks instantly!|&f&lDEFAULT&7_mine_prices
+			execute player command "sell"
+			send "{@SellerItemMessage}"
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#If you want...
+on join:
+	if {notify-function} is true:
+		if player has permission "{@NotifyPermission}":
+			send "{@JoinNotifyMessage}"
+		else:
+			stop
+	else:
+		stop
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#Admin command
+#
+#In-Game configuration
+#Create your OWN QuickSell options!
+#Enjoy In-Game configuration
+#
+#Or edit in #Functions Tab...
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+command /{@AdminCommand} [<text>] [<text>]:
+	aliases: {@AdminCommandAliases}
+	permission: {@AdminCommandPermission}
+	permission message: {@CommandPermissionMessage}
+	trigger:
+		if {admin-command} is true:
+			if arg-1 is set:
+				if arg-1 is "list" or "edit":
+					if arg-1 is "edit":
+						if arg-2 is set:
+							if arg-2 is "EssentialsCheck" or "Disabled-Message" or "Remove-Items" or "Give-Money" or "Admin-Command" or "NPC" or "Sell MSG" or "Notify-Function" or "QuickSellCommand" or "SellerItem":
+								if arg-2 is "EssentialsCheck":
+									if {essentialscheck} is true:
+										set {essentialscheck} to false
+										send "&cEssentialsCheck is now &c&lDISABLED"
+									else:
+										set {essentialscheck} to true
+										send "&aEssentialsCheck is now &a&lENABLED"
+								if arg-2 is "Disabled-Message":
+									if {disabled-message} is true:
+										set {disabled-message} to false
+										send "&cDisabled-Message is now &c&lDISABLED"
+									else:
+										set {disabled-message} to true
+										send "&aDisabled-Message is now &a&lENABLED"
+								if arg-2 is "Remove-Items":
+									if {remove-items} is true:
+										set {remove-items} to false
+										send "&cRemove-Items is now &c&lDISABLED"
+									else:
+										set {remove-items} to true
+										send "&aRemove-Items is now &a&lENABLED"
+								if arg-2 is "Give-Money":
+									if {give-money} is true:
+										set {give-money} to false
+										send "&cGive-Money is now &c&lDISABLED"
+									else:
+										set {give-money} to true
+										send "&aGive-Money is now &a&lENABLED"
+								if arg-2 is "Admin-Command":
+									if {admin-command} is true:
+										set {admin-command} to false
+										send "&cAdmin-Command is now &c&lDISABLED"
+									else:
+										set {admin-command} to true
+										send "&aAdmin-Command is now &a&lENABLED"
+								if arg-2 is "NPC":
+									if {quicksellnpc} is true:
+										set {quicksellnpc} to false
+										send "&cNPC is now &c&lDISABLED"
+									else:
+										set {quicksellnpc} to true
+										send "&aNPC is now &a&lENABLED"
+								if arg-2 is "Sell MSG":
+									if {sell-message} is true:
+										set {sell-message} to false
+										send "&cSell MSG is now &c&lDISABLED"
+									else:
+										set {sell-message} to true
+										send "&aSell MSG is now &a&lENABLED"
+								if arg-2 is "Notify-Function":
+									if {notify-function} is true:
+										set {notify-function} to false
+										send "&cNotify-Function is now &c&lDISABLED"
+									else:
+										set {notify-function} to true
+										send "&aNotify-Function is now &a&lENABLED"
+								if arg-2 is "QuickSellCommand":
+									if {quicksellcommand} is true:
+										set {quicksellcommand} to false
+										send "&cQuickSellCommand is now &c&lDISABLED"
+									else:
+										set {quicksellcommand} to true
+										send "&aQuickSellCommand is now &a&lENABLED"
+								if arg-2 is "SellerItem":
+									if {selleritem} is true:
+										set {selleritem} to false
+										send "&cSellerItem is now &c&lDISABLED"
+									else:
+										set {selleritem} to true
+										send "&aSellerItem is now &a&lENABLED"		
+							else:
+								send "{@Prefix} {@ErrorFunctionNotExists}"
+						else:
+							send "{@Prefix} {@ErrorArgumentMissing}"
+					if arg-1 is "list":
+						send "{@Prefix} &7List of variables."
+						send ""
+						if {essentialscheck} is true:
+							send "&aEssentialsCheck &a&l(( ENABLED ))"
+						else:
+							send "&cEssentialsCheck &c&l(( DISABLED ))"
+						if {quicksellcommand} is true:
+							send "&aQuickSellCommand &a&l(( ENABLED ))"
+						else:
+							send "&cQuickSellCommand &c&l(( DISABLED ))"
+						if {notify-function} is true:
+							send "&aNotify-Function &a&l(( ENABLED ))"
+						else:
+							send "&cNotify-Function &c&l(( DISABLED ))"
+						if {quicksellnpc} is true:
+							send "&aNPC &a&l(( ENABLED ))"
+						else:
+							send "&cNPC &c&l(( DISABLED ))"
+						if {disabled-message} is true:
+							send "&aNPC Disabled MSG &a&l(( ENABLED ))"
+						else:
+							send "&cNPC Disabled MSG &c&l(( DISABLED ))"
+						if {sell-message} is true:
+							send "&aSell MSG &a&l(( ENABLED ))"
+						else:
+							send "&cSell MSG &c&l(( DISABLED ))"
+						if {admin-command} is true:
+							send "&aAdmin-Command &a&l(( ENABLED ))"
+						else:
+							send "&cAdmin-Command &c&l(( DISABLED ))"
+						if {give-money} is true:
+							send "&aGive-Money &a&l(( ENABLED ))"
+						else:
+							send "&cGive-Money &c&l(( DISABLED ))"
+						if {remove-items} is true:
+							send "&aRemove-Items &a&l(( ENABLED ))"
+						else:
+							send "&cRemove-Items &c&l(( DISABLED ))"
+						if {console-strings} is true:
+							send "&aConsole-Strings &a&l(( ENABLED ))"
+						else:
+							send "&cConsole-Strings &c&l(( DISABLED ))"
+						if {disabled-message} is true:
+							send "&aDisabled-Message &a&l(( ENABLED ))"
+						else:
+							send "&cDisabled-Message &c&l(( DISABLED ))"
+						if {selleritem} is true:
+							send "&aSellerItem &a&l(( ENABLED ))"
+						else:
+							send "&cSellerItem &c&l(( DISABLED ))"
+				else:
+					execute player command "{@AdminCommand}"
+			else:
+				send "&b&lQUICK&d&lSELL &7Game Panel"
+				send "&fv%{version}%"
+				send ""
+				send "&b&lCommands &8[&f▼&8]"
+				send ""
+				send "&b/{@AdminCommand} list &8- &7Listes varaibles."
+				send "&b/{@AdminCommand} edit &d<Function> &8- &7Edit variables."
+		else:
+			if {disabled-message} is true:
+				send "{@Prefix} {@FunctionDisabledMessage}" to player
+			else:
+				stop
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#End of the file
